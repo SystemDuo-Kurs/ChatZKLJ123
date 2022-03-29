@@ -1,0 +1,26 @@
+﻿@page "/chat"
+@inject ChatZKLJ.Data.Viewmodels.Message MessageVM
+<MudPaper Class="pa-16 ma-2" Elevation="3">
+    <ul>
+        @foreach(var m in MessageVM.Messages)
+        {
+            <li>@m.Content</li>
+        }
+    </ul>
+</MudPaper>
+<MudForm Model=MessageVM.MessageEditor>
+    <MudTextField T="string" @bind-Value=MessageVM.MessageEditor.Content Label="Message"/>
+    <div class="d-flex align-center justify-space-between mt-6">
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" @onclick="Send">Send</MudButton>
+    </div>
+</MudForm>   
+@code 
+{
+    private async Task Send()
+    {
+        await MessageVM.SaveMessageAsync();
+        MessageVM.GetAll();
+        StateHasChanged();
+    }
+
+}
