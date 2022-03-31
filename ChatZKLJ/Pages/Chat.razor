@@ -16,6 +16,20 @@
 </MudForm>   
 @code 
 {
+    protected override void OnInitialized()
+    {
+        SmaranjeServera();
+    }
+
+    private async Task SmaranjeServera()
+    {
+        do
+        {
+            MessageVM.GetAll();
+            StateHasChanged();
+            await Task.Delay(500);
+        } while (true);
+    }
     private async Task Send()
     {
         await MessageVM.SaveMessageAsync();

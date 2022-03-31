@@ -1,8 +1,9 @@
 ﻿@page "/"
-
+@inject Data.Services.SignalRService Comms
 <PageTitle>Index</PageTitle>
 
 <h1>Hello, world!</h1>
+<MudButton @onclick="Tst">Test</MudButton>
 <AuthorizeView>
     <Authorized>
         ULOGOVAN
@@ -11,6 +12,18 @@
         NISI
     </NotAuthorized>
 </AuthorizeView>
-Welcome to your new app.
 
-<SurveyPrompt Title="How is Blazor working for you?" />
+@code
+{
+   
+    protected override async Task OnInitializedAsync()
+    {
+
+    }
+    private async Task Tst()
+    {
+
+        await Comms._conn.InvokeAsync("Ping", "blablabla");
+       
+    }
+}

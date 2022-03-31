@@ -1,3 +1,4 @@
+using ChatZKLJ;
 using ChatZKLJ.Areas.Identity;
 using ChatZKLJ.Data;
 using ChatZKLJ.Data.Services;
@@ -12,9 +13,10 @@ using MudBlazor.Services;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(connectionString));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddSignalR();
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddDefaultIdentity<ChatUser>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
@@ -23,10 +25,14 @@ builder.Services.AddServerSideBlazor();
 builder.Services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<ChatUser>>();
 builder.Services.AddMudServices();
 
+builder.Services.AddSingleton<SignalRService>();
 builder.Services.AddTransient<MessageService>();
 builder.Services.AddTransient<ChatZKLJ.Data.Viewmodels.Message>();
 
 var app = builder.Build();
+
+//Spin up :)
+app.Services.GetService<SignalRService>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -51,6 +57,7 @@ app.UseAuthorization();
 
 app.MapControllers();
 app.MapBlazorHub();
+app.MapHub<ChatHub>("/chatHub");
 app.MapFallbackToPage("/_Host");
 
 app.Run();
