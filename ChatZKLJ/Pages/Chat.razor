@@ -1,5 +1,7 @@
 ﻿@page "/chat"
-@inject ChatZKLJ.Data.Viewmodels.Message MessageVM
+@inject ChatZKLJ.Data.Viewmodels.IMessageVM MessageVM
+@inject ChatZKLJ.Data.Services.SignalRService Comms
+@using ChatZKLJ.Data
 <MudPaper Class="pa-16 ma-2" Elevation="3">
     <ul>
         @foreach(var m in MessageVM.Messages)
@@ -18,23 +20,22 @@
 {
     protected override void OnInitialized()
     {
-        SmaranjeServera();
+        MessageVM.GetAll();
+        StateHasChanged();
+        Comms._conn.On<Message>("NewMessage",async (m) => 
+            {
+                MessageVM.Add(m);
+                await base.InvokeAsync(() => StateHasChanged());
+            });
     }
 
-    private async Task SmaranjeServera()
-    {
-        do
-        {
-            MessageVM.GetAll();
-            StateHasChanged();
-            await Task.Delay(500);
-        } while (true);
-    }
+
     private async Task Send()
     {
         await MessageVM.SaveMessageAsync();
-        MessageVM.GetAll();
-        StateHasChanged();
+        
     }
+
+
 
 }

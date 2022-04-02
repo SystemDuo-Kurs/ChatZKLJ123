@@ -10,10 +10,10 @@ namespace ChatZKLJ.Data.Services
 
         public SignalRService()
         {
-            Console.WriteLine("Krecem opet signalR");
             HubConnectionBuilder b = new();
             b.WithUrl("https://localhost:7150/" + "chatHub");
             _conn = b.Build();
+
             Start();
         }
 

@@ -27,7 +27,7 @@ builder.Services.AddMudServices();
 
 builder.Services.AddSingleton<SignalRService>();
 builder.Services.AddTransient<MessageService>();
-builder.Services.AddTransient<ChatZKLJ.Data.Viewmodels.Message>();
+builder.Services.AddTransient<ChatZKLJ.Data.Viewmodels.IMessageVM, ChatZKLJ.Data.Viewmodels.Message>();
 
 var app = builder.Build();
 
