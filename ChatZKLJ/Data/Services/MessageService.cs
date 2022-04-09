@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.SignalR;
+using Microsoft.EntityFrameworkCore;
 
 namespace ChatZKLJ.Data.Services
 {
@@ -14,13 +15,15 @@ namespace ChatZKLJ.Data.Services
         }
 
         public List<Message> GetAll()
-            => _db.Messages.ToList();
+            => _db.Messages.Include(m => m.ChatUser).ToList();
+        
 
         public List<Message> GetAllByUser(ChatUser user)
             => _db.Messages.Where(m => m.ChatUser == user).ToList();
 
-        public async Task SaveMessageAsync(Message message)
+        public async Task SaveMessageAsync(Message message, string user)
         {
+            message.ChatUser = _db.ChatUsers.Where(c => c.UserName == user).First();
             message.Sent = DateTime.Now;
             _db.Add(message);
             await _db.SaveChangesAsync();

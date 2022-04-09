@@ -15,7 +15,7 @@
             throw new NotImplementedException();
         }
 
-        public Task SaveMessageAsync()
+        public Task SaveMessageAsync(string u)
         {
             throw new NotImplementedException();
         }

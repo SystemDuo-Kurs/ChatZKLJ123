@@ -11,7 +11,7 @@ namespace ChatZKLJ.Data.Viewmodels
 
         void Add(Data.Message m);
 
-        Task SaveMessageAsync();
+        Task SaveMessageAsync(string user);
     }
 
     public class Message : IMessageVM
@@ -36,9 +36,9 @@ namespace ChatZKLJ.Data.Viewmodels
         public void Add(Data.Message m)
             => Messages.Add(m);
 
-        public async Task SaveMessageAsync()
+        public async Task SaveMessageAsync(string user)
         {
-            await MessageService.SaveMessageAsync(MessageEditor);
+            await MessageService.SaveMessageAsync(MessageEditor, user);
             MessageEditor = new();
         }
     }

@@ -14,8 +14,7 @@ namespace ChatZKLJ.Data
         {
             base.OnModelCreating(builder);
 
-            builder.Entity<ChatUser>().HasMany(u => u.Messages)
-                .WithOne(m => m.ChatUser);
+            builder.Entity<Message>().HasOne(m => m.ChatUser);
             builder.Entity<Message>().HasKey(m => m.Id);
         }
 

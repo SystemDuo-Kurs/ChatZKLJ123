@@ -1,12 +1,14 @@
 ﻿@page "/chat"
 @inject ChatZKLJ.Data.Viewmodels.IMessageVM MessageVM
 @inject ChatZKLJ.Data.Services.SignalRService Comms
+@inject AuthenticationStateProvider AuthenticationStateProvider
 @using ChatZKLJ.Data
+
 <MudPaper Class="pa-16 ma-2" Elevation="3">
     <ul>
         @foreach(var m in MessageVM.Messages)
         {
-            <li>@m.Content</li>
+            <li>@m.ChatUser.UserName @m.Sent: @m.Content</li>
         }
     </ul>
 </MudPaper>
@@ -23,16 +25,18 @@
         MessageVM.GetAll();
         StateHasChanged();
         Comms._conn.On<Message>("NewMessage",async (m) => 
-            {
-                MessageVM.Add(m);
-                await base.InvokeAsync(() => StateHasChanged());
-            });
+             {
+                 MessageVM.Add(m);
+                 await base.InvokeAsync(() => StateHasChanged());
+             });
     }
 
 
     private async Task Send()
     {
-        await MessageVM.SaveMessageAsync();
+        var asd = (await AuthenticationStateProvider.GetAuthenticationStateAsync()).User;
+        await MessageVM.SaveMessageAsync
+            (asd.Identity.Name);
         
     }
 
